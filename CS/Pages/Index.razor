@@ -1,0 +1,101 @@
+﻿@page "/"
+@using System.Collections
+@using System.Linq.Dynamic.Core
+@using DevExpress.Data.Filtering;
+@using SelectAllRowsInGroup.Data;
+@inject WeatherForecastService ForecastService
+
+<DxGrid Data="@Data" ShowGroupPanel="true" ShowFilterRow="true" SelectAllCheckboxMode="GridSelectAllCheckboxMode.AllPages">
+    <Columns>
+        <DxGridSelectionColumn Width="60" AllowSelectAll="true" />
+        <DxGridDataColumn FieldName="Date" DisplayFormat="D" />
+        <DxGridDataColumn FieldName="TemperatureC" />
+        <DxGridDataColumn FieldName="Summary" />
+        <DxGridDataColumn FieldName="CloudCover" GroupIndex="0" />
+    </Columns>
+    <DataColumnGroupRowTemplate>
+            <DxCheckBox style="margin-left: 7px; margin-right: 4px;"
+                        AllowIndeterminateStateByClick="false"
+                        Checked="GetGroupCheckBoxChecked(context)"
+                        CheckedChanged="(bool? value) => GroupCheckBox_CheckedChanged(value, context)">
+                @context.DisplayText
+            </DxCheckBox>
+    </DataColumnGroupRowTemplate>
+</DxGrid>
+
+@code {
+    IList<WeatherForecast> Data { get; set; }
+    (string CacheKey, Dictionary<string, List<WeatherForecast>> GroupDataItems) GroupDataItemsCache { get; set; }
+
+    protected override async Task OnInitializedAsync() {
+        Data = await ForecastService.GetForecastAsync(DateTime.Today.AddDays(-10));
+    }
+
+    bool? GetGroupCheckBoxChecked(GridDataColumnGroupRowTemplateContext context) {
+        var anyItemSelected = false;
+        var anyItemDeselected = false;
+        foreach(var item in GetDataItemsFromGroup(context.Grid, context.VisibleIndex))
+            if(context.Grid.IsDataItemSelected(item))
+                anyItemSelected = true;
+            else
+                anyItemDeselected = true;
+        if(anyItemSelected && anyItemDeselected)
+            return null;
+        return !anyItemDeselected;
+    }
+
+    void GroupCheckBox_CheckedChanged(bool? value, GridDataColumnGroupRowTemplateContext context) {
+        var items = GetDataItemsFromGroup(context.Grid, context.VisibleIndex).ToDynamicList();
+        context.Grid.SelectDataItems(items, value.Value);
+    }
+
+    IEnumerable GetDataItemsFromGroup(IGrid grid, int groupRowVisibleIndex) {
+        EnsureGroupDataItemsCacheIsValid(grid);
+
+        var wherePredicate = CreateGroupRowFilterPredicate(grid, groupRowVisibleIndex);
+
+        if(!GroupDataItemsCache.GroupDataItems.ContainsKey(wherePredicate))
+            GroupDataItemsCache.GroupDataItems[wherePredicate] = Data.AsQueryable().Where(wherePredicate).ToList();
+        return GroupDataItemsCache.GroupDataItems[wherePredicate];
+    }
+
+    string CreateGroupRowFilterPredicate(IGrid grid, int groupRowVisibleIndex) {
+        var filterParts = new List<string>();
+
+        var groupedColumns = GetGroupedColumnsForGroupRow(grid, groupRowVisibleIndex);
+        filterParts.AddRange(groupedColumns.Select(i => $"{i.FieldName} == \"{grid.GetRowValue(groupRowVisibleIndex, i.FieldName)}\""));
+
+        var criteria = CriteriaStringToLowerConverter.Convert(grid.GetFilterCriteria());
+        if(!object.ReferenceEquals(criteria, null))
+            filterParts.Add(CriteriaToWhereClauseHelper.GetDynamicLinqWhere(criteria));
+
+        return string.Join(" and ", filterParts);
+    }
+
+    void EnsureGroupDataItemsCacheIsValid(IGrid grid) {
+        var key = CreateGroupDataItemsCacheKey(grid);
+        if(GroupDataItemsCache.CacheKey != key)
+            GroupDataItemsCache = (key, new());
+    }
+    string CreateGroupDataItemsCacheKey(IGrid grid) {
+        var groupedColumns = GetAllGroupedColumns(grid);
+        return string.Format("gropedColumnNames={0};filter={1}",
+            string.Join(";", groupedColumns.Select(i => i.FieldName)),
+            grid.GetFilterCriteria()
+        );
+    }
+    void InvalidateGroupDataItemsCache() {
+        GroupDataItemsCache = (null, null);
+    }
+
+    static List<IGridDataColumn> GetAllGroupedColumns(IGrid grid) {
+        return GetGroupedColumns(grid, grid.GetGroupCount()).ToList();
+    }
+    static List<IGridDataColumn> GetGroupedColumnsForGroupRow(IGrid grid, int groupRowVisibleIndex) {
+        var rowLevel = grid.GetRowLevel(groupRowVisibleIndex);
+        return GetGroupedColumns(grid, rowLevel + 1).ToList();
+    }
+    static IEnumerable<IGridDataColumn> GetGroupedColumns(IGrid grid, int count) {
+        return grid.GetSortedColumns().Take(count);
+    }
+}
