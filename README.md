@@ -7,7 +7,7 @@
 
 This example demonstrates how to congifure the [Devexpress Blazor Grid](https://docs.devexpress.com/Blazor/403143/grid) component to allow users to select and deselect all items in a group.
 
-![Select and Deselect Items in a Group](select-deselect-items.gif)
+![Select and Deselect Items in a Group](select-deselect-rows.gif)
 
 ## Specifics and Limitations
 
