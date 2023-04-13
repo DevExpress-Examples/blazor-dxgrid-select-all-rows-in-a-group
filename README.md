@@ -24,7 +24,7 @@ The Grid does not include built-in API to get rows that belong to a group. To ge
 3. Calls the **System.Linq.Dynamic.Core** library's [AsQueryable](https://learn.microsoft.com/en-us/dotnet/api/system.linq.queryable.asqueryable?view=net-8.0#system-linq-queryable-asqueryable-1(system-collections-generic-ienumerable((-0)))) method to convert the collection from [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1?view=net-7.0) to [IQueryable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/system.linq.iqueryable-1?view=net-8.0).
 4. Filters the collection based on the filter predicate. 
 
-To reduce the number of requests to the database, the example saves the result item list and the filter predicate to the `GroupDataItems` field of the  `GroupDataItemsCache` object. Content of the field remains constant until the grouping or the filter criteria changes. To detect such a change, the object stores field names of grouped columns and the current filter criteria in its `CacheKey` field.
+To reduce the number of requests to the database, the example saves result item collection and filter predicate to the `GroupDataItems` field of the  `GroupDataItemsCache` object. Content of the field remains constant until the grouping or the filter criteria changes. To detect such a change, the object stores field names of grouped columns and the current filter criteria in its `CacheKey` field.
 
 ## Files to Review
 
