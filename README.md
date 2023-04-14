@@ -13,7 +13,7 @@ This example demonstrates how to configure the [DevExpress Blazor Grid](https://
 The technique shown in the example imposes the following specifics and limitations:
 
 * We do not recommend that you use the technique when the Grid is bound to a large data collection.
-* To support scenarios when data editing  is enabled, the example implements the `InvalidateGroupDataItemsCache` method that clears cached data. Call the method in the [EditModelSaving](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.EditModelSaving) and [DataItemDeleting](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.DataItemDeleting) event handlers after you save changes to the data source.
+* To support scenarios when data editing is enabled, the example implements the `InvalidateGroupDataItemsCache` method that clears cached data. Call the method in the [EditModelSaving](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.EditModelSaving) and [DataItemDeleting](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.DataItemDeleting) event handlers after you save changes to the data source.
 
 ## Overview
 
@@ -25,7 +25,7 @@ The Grid does not include built-in API to get rows that belong to a group. To ge
 4. Uses the [CriteriaStringToLowerConverter](./CS/Data/CriteriaStringToLowerConverter.cs) class to make the filter predicate case-insensitive. The conversion is necessary because Linq expression filtering is case-sensitive, while grid filtering is not.
 5. Filters the item collection based on the filter predicate. 
 
-To reduce the number of requests to the database, the example saves result item collection and filter predicate to the `GroupDataItems` field of the  `GroupDataItemsCache` object. Content of the field remains constant until the grouping or the filter criteria changes. To detect such a change, the object stores field names of grouped columns and the current filter criteria in its `CacheKey` field.
+To reduce the number of requests to the database, the example saves result item collection and filter predicate to the `GroupDataItems` field of the  `GroupDataItemsCache` object. Content of the field remains constant until the grouping or filter criteria changes. To detect such a change, the object stores field names of grouped columns and the current filter criteria in its `CacheKey` field.
 
 ## Files to Review
 
