@@ -19,10 +19,11 @@ The technique shown in the example imposes the following specifics and limitatio
 
 The Grid does not include built-in API to get rows that belong to a group. To get data items that correspond to a group's rows, the example does the following:
 
-1. Creates a filter predicate based on [grouping](https://docs.devexpress.com/Blazor/403143/grid#group-data) and filter applied to the Grid. The predicate determines whether a data item belongs to the group and meets the Grid's [filter criteria](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.GetFilterCriteria). To convert the filter criteria to a case-insensitive predicate, the example uses the [CriteriaStringToLowerConverter](./CS/Data/CriteriaStringToLowerConverter.cs) class.
-2. Obtains a data item collection from the database bound to the Grid.
-3. Calls the **System.Linq.Dynamic.Core** library's [AsQueryable](https://learn.microsoft.com/en-us/dotnet/api/system.linq.queryable.asqueryable?view=net-8.0#system-linq-queryable-asqueryable-1(system-collections-generic-ienumerable((-0)))) method to convert the collection from [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1?view=net-7.0) to [IQueryable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/system.linq.iqueryable-1?view=net-8.0).
-4. Filters the collection based on the filter predicate. 
+1. Obtains a data item collection from the database bound to the Grid.
+2. Calls the **System.Linq.Dynamic.Core** library's [AsQueryable](https://learn.microsoft.com/en-us/dotnet/api/system.linq.queryable.asqueryable?view=net-8.0#system-linq-queryable-asqueryable-1(system-collections-generic-ienumerable((-0)))) method to convert the collection from [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1?view=net-7.0) to [IQueryable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/system.linq.iqueryable-1?view=net-8.0).
+3. Creates a filter predicate based on [grouping](https://docs.devexpress.com/Blazor/403143/grid#group-data) and filter applied to the Grid. The predicate determines whether a data item belongs to the group and meets the Grid's [filter criteria](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.GetFilterCriteria).
+4. Uses the [CriteriaStringToLowerConverter](./CS/Data/CriteriaStringToLowerConverter.cs) class to make the filter predicate case-insensitive. The conversion is necessary because the **System.Linq.Dynamic.Core** library does not support case-insensitive filtering.
+5. Filters the item collection based on the filter predicate. 
 
 To reduce the number of requests to the database, the example saves result item collection and filter predicate to the `GroupDataItems` field of the  `GroupDataItemsCache` object. Content of the field remains constant until the grouping or the filter criteria changes. To detect such a change, the object stores field names of grouped columns and the current filter criteria in its `CacheKey` field.
 
