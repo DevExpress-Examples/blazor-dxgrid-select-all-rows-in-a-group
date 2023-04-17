@@ -11,14 +11,14 @@ This example demonstrates how to configure the [DevExpress Blazor Grid](https://
 ## Specifics and Limitations
 
 
-* We do not recommend that you use the technique when the Grid is bound to a large data collection.
-* To support scenarios when data editing is enabled, the example implements the `InvalidateGroupDataItemsCache` method that clears cached data. Call the method in the [EditModelSaving](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.EditModelSaving) and [DataItemDeleting](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.DataItemDeleting) event handlers after you save changes to the data source.
+* We do not recommend that you use the technique when the Grid is bound to a large dataset.
+* To support data editing, the example implements the `InvalidateGroupDataItemsCache` method that clears cached data. Call the method in the [EditModelSaving](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.EditModelSaving) and [DataItemDeleting](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.DataItemDeleting) event handlers once you saved changes to the data source.
 
 ## Overview
 
 The Grid does not include a built-in API designed to get rows that belong to a group. To get all data items that correspond to a group's rows, the example does the following:
 
-1. Obtains a data item collection from the database bound to the Grid.
+1. Obtains a data collection from the database bound to the Grid.
 2. Calls the **System.Linq.Dynamic.Core** library's [AsQueryable](https://learn.microsoft.com/en-us/dotnet/api/system.linq.queryable.asqueryable?view=net-8.0#system-linq-queryable-asqueryable-1(system-collections-generic-ienumerable((-0)))) method to convert the collection from [IEnumerable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1?view=net-7.0) to [IQueryable\<T\>](https://learn.microsoft.com/en-us/dotnet/api/system.linq.iqueryable-1?view=net-8.0).
 3. Creates a filter predicate based on [grouping](https://docs.devexpress.com/Blazor/403143/grid#group-data) and filter criteria applied to the Grid. The predicate determines whether a data item belongs to the group and meets the Grid's [filter criteria](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.GetFilterCriteria).
 4. Uses the [CriteriaStringToLowerConverter](./CS/Data/CriteriaStringToLowerConverter.cs) class to make the filter predicate case-insensitive. This conversion is necessary because Linq expression filtering is case-sensitive, while grid filtering is not.
