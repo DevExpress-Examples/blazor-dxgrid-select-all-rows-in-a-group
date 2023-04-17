@@ -11,7 +11,7 @@ This example demonstrates how to configure the [DevExpress Blazor Grid](https://
 ## Specifics and Limitations
 
 
-* We do not recommend that you use the technique when the Grid is bound to a large dataset.
+* We do not recommend that you use this technique when the Grid is bound to a large dataset.
 * To support data editing, the example implements the `InvalidateGroupDataItemsCache` method that clears cached data. Call the method in the [EditModelSaving](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.EditModelSaving) and [DataItemDeleting](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.DataItemDeleting) event handlers once you saved changes to the data source.
 
 ## Overview
