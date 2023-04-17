@@ -31,8 +31,8 @@ To reduce the number of requests to the database, the example saves the result i
 
 - [Index.razor](./CS/Pages/Index.razor)
 - [CriteriaStringToLowerConverter.cs](./CS/Data/CriteriaStringToLowerConverter.cs)
-- [WeatherForecast.cs](/.CS/Data/WeatherForecast.cs)
-- [WeatherForecastService.cs](/.CS/Data/WeatherForecastService.cs)
+- [WeatherForecast.cs](./CS/Data/WeatherForecast.cs)
+- [WeatherForecastService.cs](./CS/Data/WeatherForecastService.cs)
 
 ## Documentation
 
