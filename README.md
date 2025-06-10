@@ -15,6 +15,7 @@ This example demonstrates how to configure the [DevExpress Blazor Grid](https://
 
 * We do not recommend that you use this technique when the Grid is bound to a large dataset.
 * To support data editing, the example implements the `InvalidateGroupDataItemsCache` method that clears cached data. Call the method in the [EditModelSaving](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.EditModelSaving) and [DataItemDeleting](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxGrid.DataItemDeleting) event handlers once you saved changes to the data source.
+* This example groups Grid data by the date and time of `DateTime` values, so rows with the same date but different times may appear in separate groups
 
 ## Overview
 
