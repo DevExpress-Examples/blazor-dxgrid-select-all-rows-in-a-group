@@ -8,7 +8,7 @@
 
 This example demonstrates how to configure the [DevExpress Blazor Grid](https://docs.devexpress.com/Blazor/403143/grid) component to allow users to select and deselect all rows in a group.
 
-![Select and Deselect Rows in a Group](select-deselect-rows.gif)
+![Select and Deselect Rows in a Group](select-deselect-rows.png)
 
 ## Specifics and Limitations
 
